@@ -11,25 +11,23 @@ import java.util.ArrayList;
  * @author gervaila
  */
 public class SubdivisionProg {
-	
-	public static final int CHAIKIN = 0;
-	public static final int CORNER = 1;
+
+	public static final int CORNER = 0;
+	public static final int CHAIKIN = 1;
 	public static final int FOURPOINT = 2;
-	
-	
+	public static final int SPLINE = 3;
 
 	public static ArrayList<Point> chaikin(boolean closedPolygon, ArrayList<Point> controles) {
 		ArrayList<Double> a = new ArrayList<Double>();
 		ArrayList<Double> b = new ArrayList<Double>();
-		a.add(3.d / 4);
-		a.add(1.d / 4);
-		b.add(1.d / 4);
-		b.add(3.d / 4);
-		return CornerCutting(closedPolygon, controles, a, b);
+		a.add(0.75);
+		a.add(0.25);
+		b.add(0.25);
+		b.add(0.75);
+		return cornerCutting(closedPolygon, controles, a, b);
 	}
 
-	public static ArrayList<Point> CornerCutting(boolean closedPolygon, ArrayList<Point> controles, ArrayList<Double> a, ArrayList<Double> b) {
-
+	public static ArrayList<Point> cornerCutting(boolean closedPolygon, ArrayList<Point> controles, ArrayList<Double> a, ArrayList<Double> b) {
 		for (int i = 0; i < 8; i++) {
 			controles = calculSubdivision(closedPolygon, controles, a, b, 0, 0);
 		}
@@ -37,20 +35,41 @@ public class SubdivisionProg {
 		return controles;
 	}
 
-	public static ArrayList<Point> fourPointsScheme(boolean closedPolygon, ArrayList<Point> controles) {
+	public static ArrayList<Point> fourPointsScheme(boolean closedPolygon, ArrayList<Point> controles, double epsilon) {
 		ArrayList<Double> a = new ArrayList<Double>();
 		ArrayList<Double> b = new ArrayList<Double>();
 		a.add(1.d);
-		b.add(-1.d / 16);
-		b.add(9.d / 16);
-		b.add(9.d / 16);
-		b.add(-1.d / 16);
+		b.add(-epsilon / 2);
+		b.add((1 + epsilon) / 2);
+		b.add((1 + epsilon) / 2);
+		b.add(-epsilon / 2);
+		
+		int numIterations = 13;
 
-		for (int i = 0; i < 5; i++) {
-			controles = calculSubdivision(closedPolygon, controles, a, b, 0, -1);
+		for (int i = 0; i < numIterations; i++) {
+			controles = calculSubdivision(true, controles, a, b, 0, -1);
+		}
+
+		if (!closedPolygon) {
+			int taille = controles.size();
+			int n = (int) Math.pow(2, numIterations);
+			for (int i = 0; i < n; i++) {
+				controles.remove(taille - n);
+			}
 		}
 
 		return controles;
+	}
+
+	public static ArrayList<Point> subdivisionSpline(boolean closedPolygon, ArrayList<Point> controles) {
+		ArrayList<Double> a = new ArrayList<Double>();
+		ArrayList<Double> b = new ArrayList<Double>();
+		a.add(0.5);
+		a.add(0.5);
+		b.add(1.d / 8);
+		b.add(6.d / 8);
+		b.add(1.d / 8);
+		return cornerCutting(closedPolygon, controles, a, b);
 	}
 
 	public static ArrayList<Point> calculSubdivision(boolean closedPolygon, ArrayList<Point> controles, ArrayList<Double> a, ArrayList<Double> b, int aJ, int bJ) {
@@ -60,7 +79,6 @@ public class SubdivisionProg {
 			s -= 2;
 		}
 		for (int i = 0; i < s; i++) {
-			Point p = new Point(0, 0);
 			double x = 0, y = 0;
 			if (i % 2 == 0) {
 				for (int j = 0; j < a.size(); j++) {
@@ -73,9 +91,7 @@ public class SubdivisionProg {
 					y += b.get(j) * controles.get((i / 2 + (j + bJ) + controles.size()) % controles.size()).y;
 				}
 			}
-
-			p = new Point(x, y);
-			res.add(p);
+			res.add(new Point(x, y));
 		}
 		return res;
 	}

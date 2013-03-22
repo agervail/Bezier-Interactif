@@ -15,13 +15,17 @@ public class AireDeDessin extends JPanel {
 	public ArrayList<Point> points;
 	public ArrayList<Point> courbe;
 	public boolean closedPolygon;
+	public double a;
+	public double b;
 	public int func;
-	
+
 	public AireDeDessin() {
 		points = new ArrayList<Point>();
 		courbe = new ArrayList<Point>();
 		new EcouteurDeSouris(this);
 		closedPolygon = true;
+		a = 0.25;
+		b = 0.5;
 	}
 
 	public Dimension getPreferredSize() {
@@ -41,7 +45,6 @@ public class AireDeDessin extends JPanel {
 			if (closedPolygon) {
 				pPrec = points.get(points.size() - 1);
 			}
-			System.out.println("cp = " + closedPolygon);
 			for (Point p : points) {
 				dessinerPoint(g, p);
 				if (pPrec != null) {
@@ -93,19 +96,29 @@ public class AireDeDessin extends JPanel {
 	private void calculerCourbe() {
 //		courbe = SubdivisionProg.chaikin(closedPolygon, points);
 //		courbe = SubdivisionProg.fourPointsScheme(closedPolygon, points);
-				switch (func) {
+		switch (func) {
 			case SubdivisionProg.CHAIKIN:
 				courbe = SubdivisionProg.chaikin(closedPolygon, points);
 				break;
 			case SubdivisionProg.CORNER:
+				ArrayList<Double> A = new ArrayList<Double>();
+				A.add(1 - a);
+				A.add(a);
+				ArrayList<Double> B = new ArrayList<Double>();
+				B.add(1 - b);
+				B.add(b);
+				courbe = SubdivisionProg.cornerCutting(closedPolygon, points, A, B);
 				break;
 			case SubdivisionProg.FOURPOINT:
-				courbe = SubdivisionProg.fourPointsScheme(closedPolygon, points);
+				courbe = SubdivisionProg.fourPointsScheme(closedPolygon, points, a);
+				break;
+			case SubdivisionProg.SPLINE:
+				courbe = SubdivisionProg.subdivisionSpline(closedPolygon, points);
 				break;
 		}
 	}
 
 	void setFunction(int func) {
-		this.func =func;
+		this.func = func;
 	}
 }

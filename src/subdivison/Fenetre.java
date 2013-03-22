@@ -10,7 +10,7 @@
  */
 package subdivison;
 
-import javax.swing.JCheckBox;
+import javax.swing.JRadioButton;
 
 /**
  *
@@ -38,9 +38,16 @@ public class Fenetre extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jCheckBox1 = new javax.swing.JCheckBox();
         jLabel2 = new javax.swing.JLabel();
-        jRadioButton1 = new javax.swing.JRadioButton();
-        jRadioButton2 = new javax.swing.JRadioButton();
-        jRadioButton3 = new javax.swing.JRadioButton();
+        cornerCuttingRadioButton = new javax.swing.JRadioButton();
+        chaikinRadioButton = new javax.swing.JRadioButton();
+        fourPointSchemeRadioButton = new javax.swing.JRadioButton();
+        splineRadioButton = new javax.swing.JRadioButton();
+        jLabel3 = new javax.swing.JLabel();
+        aSlider = new javax.swing.JSlider();
+        aLabel = new javax.swing.JLabel();
+        bSlider = new javax.swing.JSlider();
+        bLabel = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -51,7 +58,7 @@ public class Fenetre extends javax.swing.JFrame {
         aireDeDessin1.setLayout(aireDeDessin1Layout);
         aireDeDessin1Layout.setHorizontalGroup(
             aireDeDessin1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 457, Short.MAX_VALUE)
+            .addGap(0, 330, Short.MAX_VALUE)
         );
         aireDeDessin1Layout.setVerticalGroup(
             aireDeDessin1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -70,28 +77,64 @@ public class Fenetre extends javax.swing.JFrame {
 
         jLabel2.setText("Fonction");
 
-        buttonGroup1.add(jRadioButton1);
-        jRadioButton1.setSelected(true);
-        jRadioButton1.setText("CornerCutting");
-        jRadioButton1.addActionListener(new java.awt.event.ActionListener() {
+        buttonGroup1.add(cornerCuttingRadioButton);
+        cornerCuttingRadioButton.setSelected(true);
+        cornerCuttingRadioButton.setText("Corner cutting");
+        cornerCuttingRadioButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jRadioButton1ActionPerformed(evt);
+                radioButtonActionPerformed(evt);
             }
         });
 
-        buttonGroup1.add(jRadioButton2);
-        jRadioButton2.setText("Chaikin");
-        jRadioButton2.addActionListener(new java.awt.event.ActionListener() {
+        buttonGroup1.add(chaikinRadioButton);
+        chaikinRadioButton.setText("Chaikin");
+        chaikinRadioButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jRadioButton2ActionPerformed(evt);
+                radioButtonActionPerformed(evt);
             }
         });
 
-        buttonGroup1.add(jRadioButton3);
-        jRadioButton3.setText("4 Point Scheme");
-        jRadioButton3.addActionListener(new java.awt.event.ActionListener() {
+        buttonGroup1.add(fourPointSchemeRadioButton);
+        fourPointSchemeRadioButton.setText("4 Point scheme");
+        fourPointSchemeRadioButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jRadioButton3ActionPerformed(evt);
+                radioButtonActionPerformed(evt);
+            }
+        });
+
+        buttonGroup1.add(splineRadioButton);
+        splineRadioButton.setText("Spline");
+        splineRadioButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                radioButtonActionPerformed(evt);
+            }
+        });
+
+        jLabel3.setText("Epsilon / A, B");
+
+        aSlider.setValue(25);
+        aSlider.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                aSliderStateChanged(evt);
+            }
+        });
+
+        aLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        aLabel.setText("0.25");
+
+        bSlider.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                bSliderStateChanged(evt);
+            }
+        });
+
+        bLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        bLabel.setText("0.5");
+
+        jButton1.setText("Tout effacer");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
             }
         });
 
@@ -101,15 +144,36 @@ public class Fenetre extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                            .addContainerGap()
+                            .addComponent(jLabel1))
+                        .addComponent(jCheckBox1)
+                        .addComponent(cornerCuttingRadioButton)
+                        .addComponent(chaikinRadioButton)
+                        .addComponent(fourPointSchemeRadioButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                            .addContainerGap()
+                            .addComponent(jLabel2)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(jLabel1))
-                    .addComponent(jCheckBox1)
-                    .addComponent(jLabel2)
-                    .addComponent(jRadioButton1)
-                    .addComponent(jRadioButton2)
-                    .addComponent(jRadioButton3))
-                .addContainerGap(19, Short.MAX_VALUE))
+                        .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 170, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel3))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(aSlider, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 14, Short.MAX_VALUE)
+                                .addComponent(aLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(bSlider, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 14, Short.MAX_VALUE)
+                                .addComponent(bLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addComponent(splineRadioButton, javax.swing.GroupLayout.DEFAULT_SIZE, 182, Short.MAX_VALUE))
+                .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -121,12 +185,27 @@ public class Fenetre extends javax.swing.JFrame {
                 .addGap(32, 32, 32)
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jRadioButton1)
+                .addComponent(cornerCuttingRadioButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jRadioButton2)
+                .addComponent(chaikinRadioButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jRadioButton3)
-                .addContainerGap(318, Short.MAX_VALUE))
+                .addComponent(fourPointSchemeRadioButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(splineRadioButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 165, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(aSlider, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(aLabel))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(bSlider, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(bLabel))
+                .addGap(18, 18, 18)
+                .addComponent(jButton1)
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -134,14 +213,14 @@ public class Fenetre extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addComponent(aireDeDessin1, javax.swing.GroupLayout.DEFAULT_SIZE, 457, Short.MAX_VALUE)
+                .addComponent(aireDeDessin1, javax.swing.GroupLayout.DEFAULT_SIZE, 330, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(aireDeDessin1, javax.swing.GroupLayout.DEFAULT_SIZE, 518, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
@@ -152,24 +231,68 @@ public class Fenetre extends javax.swing.JFrame {
 		aireDeDessin1.repaint();
 	}//GEN-LAST:event_jCheckBox1ActionPerformed
 
-	private void jRadioButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton2ActionPerformed
-		// TODO add your handling code here:
-	}//GEN-LAST:event_jRadioButton2ActionPerformed
+	private void aSliderStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_aSliderStateChanged
+		aLabel.setText(Double.toString(getA()));
+		aireDeDessin1.a = getA();
+		aireDeDessin1.repaint();
+		if (getA() > getB()) {
+			setB(getA());
+		}
+	}//GEN-LAST:event_aSliderStateChanged
 
-	private void jRadioButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton1ActionPerformed
-		if (jRadioButton1.isSelected()) {
+	private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+		aireDeDessin1.points.clear();
+		aireDeDessin1.repaint();
+	}//GEN-LAST:event_jButton1ActionPerformed
+
+	private void bSliderStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_bSliderStateChanged
+		bLabel.setText(Double.toString(getB()));
+		aireDeDessin1.b = getB();
+		aireDeDessin1.repaint();
+		if (getB() < getA()) {
+			setA(getB());
+		}
+	}//GEN-LAST:event_bSliderStateChanged
+
+	private void radioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radioButtonActionPerformed
+		JRadioButton selection = (JRadioButton) evt.getSource();
+		if (selection == cornerCuttingRadioButton) {
+			aireDeDessin1.setFunction(SubdivisionProg.CORNER);
+			aSlider.setEnabled(true);
+			aSlider.setMinimum(0);
+			bSlider.setEnabled(true);
+		} else if (selection == chaikinRadioButton) {
 			aireDeDessin1.setFunction(SubdivisionProg.CHAIKIN);
-		}
-		aireDeDessin1.repaint();
-
-	}//GEN-LAST:event_jRadioButton1ActionPerformed
-
-	private void jRadioButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton3ActionPerformed
-		if (jRadioButton3.isSelected()) {
+			aSlider.setEnabled(false);
+			bSlider.setEnabled(false);
+		} else if (selection == fourPointSchemeRadioButton) {
 			aireDeDessin1.setFunction(SubdivisionProg.FOURPOINT);
+			aSlider.setEnabled(true);
+			aSlider.setMinimum(-100);
+			bSlider.setEnabled(false);
+		} else if (selection == splineRadioButton) {
+			aireDeDessin1.setFunction(SubdivisionProg.SPLINE);
+			aSlider.setEnabled(false);
+			bSlider.setEnabled(false);
 		}
 		aireDeDessin1.repaint();
-	}//GEN-LAST:event_jRadioButton3ActionPerformed
+	}//GEN-LAST:event_radioButtonActionPerformed
+
+	private double getA() {
+		return (double) aSlider.getValue() / 100.0;
+	}
+
+	private double getB() {
+		return (double) bSlider.getValue() / 100.0;
+	}
+
+	private void setA(double a) {
+		aSlider.setValue((int) (a * 100));
+	}
+
+	private void setB(double b) {
+		bSlider.setValue((int) (b * 100));
+	}
 
 	/**
 	 * @param args the command line arguments
@@ -207,14 +330,21 @@ public class Fenetre extends javax.swing.JFrame {
 		});
 	}
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel aLabel;
+    private javax.swing.JSlider aSlider;
     private subdivison.AireDeDessin aireDeDessin1;
+    private javax.swing.JLabel bLabel;
+    private javax.swing.JSlider bSlider;
     private javax.swing.ButtonGroup buttonGroup1;
+    private javax.swing.JRadioButton chaikinRadioButton;
+    private javax.swing.JRadioButton cornerCuttingRadioButton;
+    private javax.swing.JRadioButton fourPointSchemeRadioButton;
+    private javax.swing.JButton jButton1;
     private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JRadioButton jRadioButton1;
-    private javax.swing.JRadioButton jRadioButton2;
-    private javax.swing.JRadioButton jRadioButton3;
+    private javax.swing.JRadioButton splineRadioButton;
     // End of variables declaration//GEN-END:variables
 }
