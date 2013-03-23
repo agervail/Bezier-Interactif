@@ -23,8 +23,6 @@ public class Subdivison {
     }
 
     private static void createAndShowGUI() {
-        System.out.println("Created GUI on EDT? "+
-        SwingUtilities.isEventDispatchThread());
         Fenetre f = new Fenetre();
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         f.pack();

@@ -14,13 +14,11 @@ import java.awt.event.MouseEvent;
 public class EcouteurDeSouris extends MouseAdapter {
 
 	AireDeDessin aire;
-	Point dragPoint;
 
 	public EcouteurDeSouris(AireDeDessin aire) {
 		this.aire = aire;
 		aire.addMouseListener(this);
 		aire.addMouseMotionListener(this);
-		dragPoint = null;
 	}
 
 	@Override
@@ -28,40 +26,17 @@ public class EcouteurDeSouris extends MouseAdapter {
 		Point p = aire.clicSurPoint(new Point(e.getPoint()));
 		if (p == null) {
 			if (e.getButton() == MouseEvent.BUTTON1) {
-				dragPoint = new Point(e.getPoint());
+				aire.dragPoint = new Point(e.getPoint());
 			}
-			System.out.println("ajout d'un point");
-			int index = 0;
-			int nearestIndex = 0;
-			int nearestDist = Integer.MAX_VALUE;
-			if (!aire.points.isEmpty()) {
-				Point pLast = aire.points.get(aire.points.size() - 1);
-				for (Point p2 : aire.points) {
-					int dist = (int) ((dragPoint.x - p2.x) * (dragPoint.x - p2.x) + (dragPoint.y - p2.y) * (dragPoint.y - p2.y)
-							+ (pLast.x - dragPoint.x) * (pLast.x - dragPoint.x) + (pLast.y - dragPoint.y) * (pLast.y - dragPoint.y)
-							- ((p2.x - pLast.x) * (p2.x - pLast.x) + (p2.y - pLast.y) * (p2.y - pLast.y)));
-					if (dist < nearestDist) {
-						nearestDist = dist;
-						nearestIndex = index;
-					}
-					pLast = p2;
-					index++;
-				}
-				if (nearestIndex == 0) {
-					Point pFirst = aire.points.get(0);
-					pLast = aire.points.get(aire.points.size() - 1);
-					if ((dragPoint.x - pLast.x) * (dragPoint.x - pLast.x) + (dragPoint.y - pLast.y) * (dragPoint.y - pLast.y)
-							< (dragPoint.x - pFirst.x) * (dragPoint.x - pFirst.x) + (dragPoint.y - pFirst.y) * (dragPoint.y - pFirst.y)) {
-						nearestIndex = aire.points.size();
-					}
-				}
-			}
-			aire.points.add(nearestIndex, dragPoint);
+			System.out.println("ni = " + aire.nearestIndex);
+			aire.points.add(aire.nearestIndex, aire.dragPoint);
+			aire.calculerCourbe();
 		} else {
 			if (e.getButton() == MouseEvent.BUTTON1) {
-				dragPoint = p;
+				aire.dragPoint = p;
 			} else {
 				aire.points.remove(p);
+				aire.calculerCourbe();
 			}
 		}
 		checkDrag();
@@ -70,32 +45,85 @@ public class EcouteurDeSouris extends MouseAdapter {
 
 	@Override
 	public void mouseDragged(MouseEvent e) {
-		if (dragPoint != null) {
-			dragPoint.x = e.getX();
-			dragPoint.y = e.getY();
+		if (aire.dragPoint != null) {
+			aire.dragPoint.x = e.getX();
+			aire.dragPoint.y = e.getY();
 		}
 		checkDrag();
+		aire.calculerCourbe();
 		aire.repaint();
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		dragPoint = null;
+		aire.dragPoint = null;
+		aire.mouse = new Point(e.getPoint());
+		aire.nearestIndex = getNearestIndex();
 		aire.repaint();
 	}
-	
+
 	private void checkDrag() {
-		if (dragPoint != null) {
+		if (aire.dragPoint != null) {
 			int padding = 10;
-			if (dragPoint.x < padding)
-				dragPoint.x = padding;
-			else if (dragPoint.x > aire.getWidth() - 1 - padding)
-				dragPoint.x = aire.getWidth() - 1 - padding;
-			
-			if (dragPoint.y < padding)
-				dragPoint.y = padding;
-			else if (dragPoint.y > aire.getHeight() - 1 - padding)
-				dragPoint.y = aire.getHeight() - 1 - padding;
+			if (aire.dragPoint.x < padding) {
+				aire.dragPoint.x = padding;
+			} else if (aire.dragPoint.x > aire.getWidth() - 1 - padding) {
+				aire.dragPoint.x = aire.getWidth() - 1 - padding;
+			}
+
+			if (aire.dragPoint.y < padding) {
+				aire.dragPoint.y = padding;
+			} else if (aire.dragPoint.y > aire.getHeight() - 1 - padding) {
+				aire.dragPoint.y = aire.getHeight() - 1 - padding;
+			}
 		}
+	}
+
+	@Override
+	public void mouseMoved(MouseEvent e) {
+		aire.mouse = new Point(e.getPoint());
+		aire.nearestIndex = getNearestIndex();
+		aire.repaint();
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+		aire.mouse = null;
+		aire.repaint();
+	}
+
+	private int getNearestIndex() {
+		int index = 0;
+		int nearestIndex = 0;
+		double nearestDist = Double.MAX_VALUE;
+		if (!aire.points.isEmpty()) {
+			Point pLast = aire.points.get(aire.points.size() - 1);
+			for (Point p2 : aire.points) {
+				/*
+				int dist = (int) ((aire.mouse.x - p2.x) * (aire.mouse.x - p2.x) + (aire.mouse.y - p2.y) * (aire.mouse.y - p2.y)
+						+ (pLast.x - aire.mouse.x) * (pLast.x - aire.mouse.x) + (pLast.y - aire.mouse.y) * (pLast.y - aire.mouse.y)
+						- ((p2.x - pLast.x) * (p2.x - pLast.x) + (p2.y - pLast.y) * (p2.y - pLast.y)));
+				*/
+				double dist = distance(aire.mouse, p2) + distance(pLast, aire.mouse) - distance(p2, pLast);
+				if (dist < nearestDist) {
+					nearestDist = dist;
+					nearestIndex = index;
+				}
+				pLast = p2;
+				index++;
+			}
+			if (nearestIndex == 0) {
+				Point pFirst = aire.points.get(0);
+				pLast = aire.points.get(aire.points.size() - 1);
+				if (distance(aire.mouse, pLast) < distance(aire.mouse, pFirst)) {
+					nearestIndex = aire.points.size();
+				}
+			}
+		}
+		return nearestIndex;
+	}
+	
+	private double distance(Point a, Point b) {
+		return Math.sqrt((a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y));
 	}
 }
